@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pathlib import Path
 import os
 from .config import settings
@@ -36,28 +37,37 @@ app.include_router(contact.router, prefix="/api")
 def health_check():
     return {"status": "ok", "message": "API is running"}
 
-# Intentar montar frontend solo si existe
+
+# === Servir Frontend ===
 try:
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
     FRONTEND_DIR = BASE_DIR / "frontend"
-    
+
+    print(f"📂 FRONTEND_DIR = {FRONTEND_DIR}")
+
     if FRONTEND_DIR.exists() and FRONTEND_DIR.is_dir():
-        # Verificar que tenga archivos
-        if any(FRONTEND_DIR.iterdir()):
-            app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
-            print(f"✅ Frontend mounted from: {FRONTEND_DIR}")
+        index_path = FRONTEND_DIR / "index.html"
+
+        if index_path.exists():
+            # Rutas estáticas separadas para evitar conflictos con /api
+            app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
+            app.mount("/css", StaticFiles(directory=FRONTEND_DIR / "css"), name="css")
+            app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="js")
+
+            @app.get("/")
+            async def serve_index():
+                return FileResponse(index_path)
+
+            print(f"✅ Frontend mounted successfully from: {FRONTEND_DIR}")
         else:
-            print(f"⚠️ Frontend directory exists but is empty: {FRONTEND_DIR}")
-            raise FileNotFoundError("Frontend directory is empty")
+            raise FileNotFoundError("index.html not found in frontend directory")
     else:
-        print(f"⚠️ Frontend directory not found: {FRONTEND_DIR}")
         raise FileNotFoundError("Frontend directory does not exist")
-        
+
 except Exception as e:
     print(f"⚠️ Could not mount frontend: {e}")
     print("📡 Running in API-only mode")
-    
-    # Ruta raíz alternativa si no hay frontend
+
     @app.get("/")
     def read_root():
         return {
@@ -73,11 +83,13 @@ except Exception as e:
             }
         }
 
+
+# === Run ===
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
         "app.main:app",
-        host=settings.API_HOST,
-        port=settings.API_PORT,
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", 8080)),  # ✅ Usa el puerto dinámico de Railway
         reload=settings.RELOAD
     )
