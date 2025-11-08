@@ -50,7 +50,6 @@ try:
 
         if index_path.exists():
             # Rutas estáticas separadas para evitar conflictos con /api
-            app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
             app.mount("/css", StaticFiles(directory=FRONTEND_DIR / "css"), name="css")
             app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="js")
 
