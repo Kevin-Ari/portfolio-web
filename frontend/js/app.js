@@ -1,8 +1,8 @@
 const projects = [
-{id:1,title:"API de tareas con FastAPI",desc:"Una API REST para gestionar tareas con autenticación JWT.",tags:["python","fastapi","backend"],live:'#',code:'#'},
-{id:2,title:"Pipeline ETL con Spark",desc:"ETL en PySpark que procesa logs y los exporta a BigQuery.",tags:["spark","etl","data"],live:'#',code:'#'},
-{id:3,title:"Dashboard con Streamlit",desc:"Dashboard interactivo para métricas de negocio.",tags:["python","frontend"],live:'#',code:'#'},
-{id:4,title:"Microservicio de autenticación",desc:"Servicio de auth con OAuth2 y OpenID Connect.",tags:["fastapi","security"],live:'#',code:'#'}
+{id:1,title:"API de regitro de usuarios",desc:"Una API REST para para pruebas en BigQuery",tags:["python","fastapi","backend"],live:'#',code:'#'},
+{id:2,title:"Pipeline ETL con Spark",desc:"ETL en PySpark que procesa inforacion de un CSV, los guarda en buquets y se usan para bIgquery.",tags:["spark","cloud Storage","etl","data", "bigquery", "dataproc"],live:'#',code:'#'},
+{id:3,title:"Dashboard con PowerBI",desc:"Dashboard interactivo para métricas de negocio.",tags:["dax","modelado","azure"],live:'#',code:'#'},
+{id:4,title:"Orquestacion de pipelines",desc:"Automatizacion de multiples pipelines en PDI",tags:["pentaho","triggers", "etl"],live:'#',code:'#'}
 ];
 
 
