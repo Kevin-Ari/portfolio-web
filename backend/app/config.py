@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from typing import List
+from pathlib import Path
 
 class Settings(BaseSettings):
     # Database - PostgreSQL URL
@@ -20,7 +21,9 @@ class Settings(BaseSettings):
     EMAIL_PASSWORD: str = ""
     
     class Config:
-        env_file = "../.env"
+        env_file = Path(__file__).resolve().parent.parent.parent / ".env"
+#railway
+#        env_file = "../.env"
     
     @property
     def origins_list(self) -> List[str]:
